@@ -1,0 +1,18 @@
+{
+  "public/signup.png": {
+    "file": "assets/signup-DVHsZNDk.png",
+    "src": "public/signup.png"
+  },
+  "src/entry-client.jsx": {
+    "file": "assets/entry-client-CEKrogmg.js",
+    "name": "entry-client",
+    "src": "src/entry-client.jsx",
+    "isEntry": true,
+    "css": [
+      "assets/entry-client-CRGtr2xa.css"
+    ],
+    "assets": [
+      "assets/signup-DVHsZNDk.png"
+    ]
+  }
+}

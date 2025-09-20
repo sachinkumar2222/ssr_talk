@@ -35,7 +35,7 @@ async function createServer() {
 
   app.use(
     cors({
-      origin: "http://localhost:5173", 
+      origin: "http://localhost:5173",
       credentials: true,
     })
   );
@@ -52,9 +52,15 @@ async function createServer() {
     try {
       const url = req.originalUrl;
 
-      const { render } = await import("../../Frontend/dist-ssr/entry-server.js");
+      if (url === "/favicon.ico") {
+        return res.status(204).send();
+      }
 
-      const appHtml = await render(url);
+      const { render } = await import(
+        "../../Frontend/dist-ssr/entry-server.js"
+      );
+
+      const { appHtml, dehydratedState } = await render(url, req);
 
       const entry = manifest["src/entry-client.jsx"];
       const cssLinks = (entry.css || [])
@@ -63,23 +69,26 @@ async function createServer() {
       const jsScript = `<script type="module" src="/${entry.file}"></script>`;
 
       const html = `<!DOCTYPE html>
-       <html lang="en">
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Social Talk</title>
-          ${cssLinks}
-        </head>
-        <body>
-          <div id="root">${appHtml}</div>
-          ${jsScript}
-        </body>
-       </html>`;
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Social Talk</title>
+  ${cssLinks}
+</head>
+<body>
+  <div id="root">${appHtml}</div>
+  <script>window.__REACT_QUERY_STATE__ = ${JSON.stringify(
+    dehydratedState
+  )}</script>
+  ${jsScript}
+</body>
+</html>`;
 
       res.status(200).set({ "Content-Type": "text/html" }).end(html);
     } catch (err) {
       console.error("❌ SSR Error:", err);
-      res.status(500).send("error is ",err.stack);
+      res.status(500).send(err.stack);
     }
   });
 

@@ -16,14 +16,23 @@ import NotificationPage from "./Pages/NotificationPage.jsx";
 import FriendsPage from "./Pages/FriendsPage.jsx";
 import UpdateProfilePage from "./Pages/UpdateProfilePage.jsx";
 
-const App = () => {
+const App = ({ serverIsAuthenticated }) => {
   const { isLoading, authUser } = useAuthUser();
   const { theme } = useThemeStore();
 
-  const isAuthenticated = authUser?.isVerified;
-  const isOnboarded = authUser?.isOnboarded;
+  const isServerRender = serverIsAuthenticated !== undefined;
 
-  if (isLoading) return <PageLoader />;
+  const finalIsLoading = isServerRender ? false : isLoading;
+  const finalAuthUser = isServerRender
+    ? serverIsAuthenticated
+      ? authUser
+      : null
+    : authUser;
+
+  if (finalIsLoading) return <PageLoader />;
+
+  const isAuthenticated = finalAuthUser?.isVerified;
+  const isOnboarded = finalAuthUser?.isOnboarded;
 
   return (
     <div className="h-screen" data-theme={theme}>
@@ -55,7 +64,11 @@ const App = () => {
           path="/onboarding"
           element={
             isAuthenticated ? (
-              !isOnboarded ? <OnboardingPage /> : <Navigate to="/" />
+              !isOnboarded ? (
+                <OnboardingPage />
+              ) : (
+                <Navigate to="/" />
+              )
             ) : (
               <Navigate to="/login" />
             )
@@ -115,3 +128,4 @@ const App = () => {
 };
 
 export default App;
+

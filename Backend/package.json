@@ -4,7 +4,8 @@
   "description": "",
   "main": "Server.js",
   "scripts": {
-    "dev": "nodemon src/Server.js"
+      "build": "cd ../Frontend && npm install && npm run build && npm run build:ssr",
+      "start": "nodemon src/Server.js"
   },
   "keywords": [],
   "author": "",
