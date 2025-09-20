@@ -35,7 +35,7 @@ async function createServer() {
 
   app.use(
     cors({
-      origin: "http://localhost:5173",
+      origin: "https://ssr-talk.onrender.com", 
       credentials: true,
     })
   );

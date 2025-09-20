@@ -13,7 +13,7 @@ export function createSocketServer(app) {
 
   io = new Server(server, {
     cors: {
-      origin: ["http://localhost:5173"],
+      origin: ["https://ssr-talk.onrender.com"],
       methods: ["GET", "POST"],
       credentials: true,
     },
